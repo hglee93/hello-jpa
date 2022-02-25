@@ -1,4 +1,7 @@
-package jpabook.jpashop.domain;
+package jpabook.jpashop.domain.order;
+
+import jpabook.jpashop.domain.delivery.Delivery;
+import jpabook.jpashop.domain.member.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,18 +16,19 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    public void addOrderItem(OrderItem orderItem) {
-        orderItems.add(orderItem);
-        orderItem.setOrder(this);
-    }
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
 
+    @Column
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
@@ -60,5 +64,10 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
     }
 }

@@ -1,4 +1,6 @@
-package jpabook.jpashop.domain;
+package jpabook.jpashop.domain.order;
+
+import jpabook.jpashop.domain.item.Item;
 
 import javax.persistence.*;
 
@@ -10,15 +12,16 @@ public class OrderItem {
     @Column(name = "order_item_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
     private int orderPrice;
+
     private int count;
 
     public Long getId() {
